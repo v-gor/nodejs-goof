@@ -10,7 +10,7 @@ jobs:
         run: snyk test --severity-threshold=critical --sarif-file-output=snyk-sarif1.json
         continue-on-error: true
         env:
-           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+           SNYK_TOKEN: ${{ secrets.snyk_token }}
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
