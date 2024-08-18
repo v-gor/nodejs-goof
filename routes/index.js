@@ -188,8 +188,11 @@ exports.create = function (req, res, next) {
 };
 
 exports.destroy = function (req, res, next) {
-  Todo.findById(req.params.id, function (err, todo) {
-
+  const tid = req.params.id.replace(/[^\w\d]/g, '');
+  if(!mongoose.Types.ObjectId.isValid(tid)) {
+    return next(new Error('Invalid ID format'));
+  }
+  Todo.findById(tid, function (err, todo) {
     try {
       todo.remove(function (err, todo) {
         if (err) return next(err);
@@ -216,8 +219,12 @@ exports.edit = function (req, res, next) {
 };
 
 exports.update = function (req, res, next) {
-  Todo.findById(req.params.id, function (err, todo) {
+  const tid = req.params.id.replace(/[^\w\d]/g, ''); //sanitize
+  if(!mongoose.Types.ObjectId.isValid(tid)) { //validate
+    return next(new Error('Invalid ID format'));
+  }
 
+  Todo.findById(tid, function (err, todo) {
     todo.content = req.body.content;
     todo.updated_at = Date.now();
     todo.save(function (err, todo, count) {
